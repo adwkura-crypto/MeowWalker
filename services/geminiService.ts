@@ -44,9 +44,8 @@ const loadAMap = (): Promise<any> => {
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.async = true;
-        // Add random query param to prevent caching issues if previous load failed
-        // Use the dynamic callback name
-        script.src = `https://webapi.amap.com/maps?v=2.0&key=ad56ce5679ff34e2904876add5d51acc&plugin=AMap.Riding,AMap.Geocoder,AMap.AutoComplete&callback=${callbackName}`;
+        // Added AMap.Geolocation to plugins
+        script.src = `https://webapi.amap.com/maps?v=2.0&key=ad56ce5679ff34e2904876add5d51acc&plugin=AMap.Riding,AMap.Geocoder,AMap.AutoComplete,AMap.Geolocation&callback=${callbackName}`;
         
         script.onerror = (e) => {
             console.error("AMap Script Load Error:", e);
@@ -74,8 +73,6 @@ const waitForAMap = async (): Promise<any> => {
         return window.AMap;
     } catch (error) {
         console.error("waitForAMap failed:", error);
-        // CRITICAL: Reset loader on failure to allow retries. 
-        // If we don't null this, subsequent calls return the same rejected/timed-out promise.
         aMapLoader = null;
         throw error;
     }
@@ -158,10 +155,31 @@ export const searchPlaces = async (query: string): Promise<Array<{ name: string;
       });
   } catch (error) {
       console.error("AMap Search Error:", error);
-      // Return empty array instead of throwing to prevent UI crash
       return [];
   }
 };
+
+export const getCurrentLocation = async (): Promise<string> => {
+    try {
+        const AMap = await waitForAMap();
+        return new Promise((resolve, reject) => {
+            const geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,
+                timeout: 10000,
+            });
+            
+            geolocation.getCurrentPosition((status: any, result: any) => {
+                if (status === 'complete') {
+                    resolve(result.formattedAddress);
+                } else {
+                    reject("定位失败");
+                }
+            });
+        });
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const checkIsHoliday = async (dateStr: string): Promise<boolean> => {
      // Simple client-side weekend check (Saturday, Sunday)

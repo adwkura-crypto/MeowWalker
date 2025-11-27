@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { AppSettings, Appointment, DistanceResult } from '../types';
 import { calculateDistance, checkIsHoliday } from '../services/geminiService';
-import { MapPin, Clock, Save, Info, Plus, X, Copy, CalendarPlus, ChevronRight, Users, User, Zap } from 'lucide-react';
+import { Clock, Save, Info, Plus, X, Copy, CalendarPlus, ChevronRight, Users, User, Zap, CalendarDays, MapPin } from 'lucide-react';
 import { Button } from './Button';
 import { AddressInput } from './AddressInput';
 
@@ -64,6 +64,11 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
     } else {
         showToast("至少需要一个日期喵");
     }
+  };
+
+  const getWeekday = (dateStr: string) => {
+    const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+    return days[new Date(dateStr).getDay()];
   };
 
   const calculateSingleTripPrice = (distance: number, cats: number, isHoliday: boolean) => {
@@ -193,17 +198,17 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative pb-10">
       {/* Old Client Modal */}
       {showClientList && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in p-4" onClick={() => setShowClientList(false)}>
-              <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
-                  <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/80">
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30 backdrop-blur-md animate-fade-in p-4" onClick={() => setShowClientList(false)}>
+              <div className="bg-white/95 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col border border-white/40" onClick={e => e.stopPropagation()}>
+                  <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
                       <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
                           <Users className="w-5 h-5 text-blue-500" />
                           选择老客户
                       </h3>
-                      <button onClick={() => setShowClientList(false)} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+                      <button onClick={() => setShowClientList(false)} className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
                           <X className="w-4 h-4 text-gray-600" />
                       </button>
                   </div>
@@ -217,11 +222,11 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
                               <button 
                                 key={i} 
                                 onClick={() => handleSelectClient(c)}
-                                className="w-full text-left p-4 rounded-xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50 transition-all group"
+                                className="w-full text-left p-4 rounded-xl border border-gray-100 bg-white hover:bg-blue-50 transition-all group shadow-sm"
                               >
                                   <div className="flex justify-between items-start">
                                       <span className="font-bold text-slate-700 group-hover:text-blue-700">{c.name}</span>
-                                      <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">曾用</span>
+                                      <span className="text-[10px] bg-blue-100/80 text-blue-600 px-2 py-0.5 rounded-full font-medium">曾用</span>
                                   </div>
                                   <div className="flex items-center gap-1 mt-1 text-gray-500 text-sm">
                                       <MapPin className="w-3.5 h-3.5" />
@@ -235,12 +240,12 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
           </div>
       )}
 
-      <div className="bg-white p-6 rounded-3xl shadow-sm border border-blue-50">
+      <div className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl shadow-lg border border-white/40">
         
         {/* Prominent Old Client Button - Theme Blue */}
         <button 
             onClick={() => setShowClientList(true)}
-            className="w-full mb-6 py-3 px-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-xl shadow-lg shadow-blue-200 flex items-center justify-center gap-2 font-bold transform transition-all active:scale-95 hover:from-blue-500 hover:to-blue-700"
+            className="w-full mb-6 py-3 px-4 bg-gradient-to-r from-blue-400/90 to-blue-600/90 hover:from-blue-500 hover:to-blue-700 text-white rounded-xl shadow-lg shadow-blue-200/50 flex items-center justify-center gap-2 font-bold transform transition-all active:scale-95 backdrop-blur-sm"
         >
             <Users className="w-5 h-5 text-white" />
             从老客户列表选择
@@ -255,92 +260,118 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
         
         <div className="space-y-4">
            <div>
-            <label className="block text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">客户称呼</label>
+            <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">客户称呼</label>
             <div className="relative">
                 <input 
                     type="text" 
                     value={clientName}
                     onChange={e => setClientName(e.target.value)}
                     placeholder="例如：张小姐"
-                    className="w-full p-3 pl-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-gray-300 text-sm font-medium text-slate-700"
+                    className="w-full p-3 pl-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder:text-gray-400 text-base font-medium text-slate-700 bg-white shadow-sm"
                 />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">客户地址</label>
+            <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">客户地址</label>
             <AddressInput
               value={address}
               onChange={e => setAddress(e.target.value)}
               placeholder="例如：幸福花园5号楼201"
-              className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-gray-300 text-sm font-medium text-slate-700"
+              className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all placeholder:text-gray-400 text-base font-medium text-slate-700 bg-white shadow-sm"
+              enablePaste={true}
             />
           </div>
 
-          <div>
-                <label className="block text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">上门时间</label>
-                <div className="relative">
-                <input 
-                    type="time" 
-                    value={time} 
-                    onChange={e => setTime(e.target.value)} 
-                    className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition-all bg-white text-sm font-bold text-slate-700" 
-                />
-                </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">猫咪数量</label>
-            <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-xl border border-gray-200 h-[46px]">
-                <button onClick={() => setCatCount(Math.max(1, catCount - 1))} className="w-9 h-full flex items-center justify-center rounded-lg bg-white shadow-sm text-blue-600 font-bold active:bg-blue-50 transition-colors">-</button>
-                <span className="flex-1 text-center font-bold text-gray-700">{catCount}</span>
-                <button onClick={() => setCatCount(catCount + 1)} className="w-9 h-full flex items-center justify-center rounded-lg bg-white shadow-sm text-blue-600 font-bold active:bg-blue-50 transition-colors">+</button>
-            </div>
-          </div>
-
-          <div>
-             <label className="block text-xs font-bold text-gray-400 mb-1 ml-1 uppercase">喂猫日期 ({selectedDates.length}天)</label>
-             <div className="flex flex-wrap gap-2 mb-2">
-                {selectedDates.map(date => (
-                    <div key={date} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 border border-blue-100">
-                        {date.slice(5)} 
-                        <button onClick={() => removeDate(date)} className="text-blue-400 hover:text-blue-700 p-0.5"><X className="w-3 h-3" /></button>
+          {/* Time and Cat Count on the same row */}
+          <div className="grid grid-cols-2 gap-4">
+              <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">上门时间</label>
+                    <div className="relative">
+                    <input 
+                        type="time" 
+                        value={time} 
+                        onChange={e => setTime(e.target.value)} 
+                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all bg-white text-base font-bold text-slate-700 shadow-sm text-center" 
+                    />
                     </div>
-                ))}
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">猫咪数量</label>
+                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-gray-200 h-[48px] shadow-sm">
+                    <button onClick={() => setCatCount(Math.max(1, catCount - 1))} className="w-10 h-full flex items-center justify-center rounded-lg bg-gray-50 shadow-sm text-blue-600 font-bold active:bg-blue-100 transition-colors hover:bg-gray-100 border border-gray-100">-</button>
+                    <span className="flex-1 text-center font-bold text-gray-700">{catCount}</span>
+                    <button onClick={() => setCatCount(catCount + 1)} className="w-10 h-full flex items-center justify-center rounded-lg bg-gray-50 shadow-sm text-blue-600 font-bold active:bg-blue-100 transition-colors hover:bg-gray-100 border border-gray-100">+</button>
+                </div>
+              </div>
+          </div>
+
+          <div>
+             <div className="flex justify-between items-end mb-1 ml-1">
+                <label className="text-xs font-bold text-gray-500 uppercase">喂猫日期</label>
+                <span className="text-[10px] font-bold text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                    共 {selectedDates.length} 天
+                </span>
              </div>
-             <div className="relative">
-                <input 
-                    type="date"
-                    className="w-full p-3 pl-10 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-sm font-medium text-slate-700"
-                    onChange={handleAddDate}
-                    value="" // Always reset to allow picking same date if needed (though we filter dupes)
-                />
-                <CalendarPlus className="w-5 h-5 text-gray-400 absolute left-3 top-3" />
+             
+             {/* Styled Date List */}
+             <div className="bg-white border border-gray-200 rounded-xl p-3 mb-2 min-h-[50px] shadow-sm">
+                 <div className="flex flex-wrap gap-2">
+                    {selectedDates.map(date => (
+                        <div key={date} className="group relative bg-blue-50 border border-blue-100 text-blue-700 pl-3 pr-8 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-all hover:scale-105 hover:shadow-md">
+                            <div className="flex flex-col leading-none">
+                                <span className="text-sm">{date.slice(5)}</span>
+                                <span className="text-[10px] text-blue-400 font-normal">{getWeekday(date)}</span>
+                            </div>
+                            <button 
+                                onClick={() => removeDate(date)} 
+                                className="absolute right-1 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-blue-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    ))}
+                    
+                    {/* Inline Add Date Trigger */}
+                    <div className="relative">
+                        <input 
+                            type="date"
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                            onChange={handleAddDate}
+                            value="" 
+                        />
+                        <button className="h-full px-4 py-2 bg-gray-50 border border-dashed border-gray-300 text-gray-500 rounded-xl flex items-center gap-1 hover:bg-gray-100 transition-colors">
+                            <Plus className="w-4 h-4" />
+                            <span className="text-xs font-bold">加一天</span>
+                        </button>
+                    </div>
+                 </div>
              </div>
           </div>
 
-          <Button onClick={handleCalculate} isLoading={isLoading} className="w-full mt-2 shadow-blue-300/50 py-3.5 text-base">
+          <Button onClick={handleCalculate} isLoading={isLoading} className="w-full mt-2 shadow-xl shadow-blue-300/40 py-4 text-base bg-blue-600 hover:bg-blue-700 border-none backdrop-blur-sm">
             开始估价
           </Button>
         </div>
       </div>
 
       {quote && (
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-6 rounded-3xl shadow-xl text-white animate-fade-in relative overflow-hidden">
+        <div className="bg-gradient-to-br from-blue-600/95 to-indigo-600/95 p-6 rounded-3xl shadow-2xl text-white animate-fade-in relative overflow-hidden backdrop-blur-xl border border-white/10">
           {/* Decorative elements */}
-          <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/20 to-transparent"></div>
 
           <div className="relative z-10">
             <div className="flex justify-between items-start mb-6">
                 <div>
-                <p className="text-blue-200 text-xs mb-1 font-medium tracking-wide">预估总费用</p>
-                <h3 className="text-5xl font-extrabold tracking-tight flex items-baseline">
+                <p className="text-blue-100/80 text-xs mb-1 font-medium tracking-wide">预估总费用</p>
+                <h3 className="text-5xl font-extrabold tracking-tight flex items-baseline drop-shadow-sm">
                     <span className="text-2xl mr-1">¥</span>{quote.totalPrice}
                 </h3>
                 </div>
                 <div className="text-right">
-                    <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 mb-1 border border-white/20">
+                    <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5 mb-1 border border-white/20 shadow-sm">
                         <Zap className="w-3.5 h-3.5 text-yellow-300 fill-yellow-300" />
                         <span className="text-sm font-bold">{quote.result.distanceKm.toFixed(1)} km</span>
                     </div>
@@ -348,7 +379,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
                 </div>
             </div>
 
-            <div className="bg-black/20 rounded-xl p-4 backdrop-blur-sm mb-6 border border-white/10">
+            <div className="bg-black/20 rounded-xl p-4 backdrop-blur-md mb-6 border border-white/10 shadow-inner">
                 <div className="flex justify-between items-center mb-2">
                      <h4 className="text-xs font-bold text-blue-200 uppercase tracking-wider">费用明细</h4>
                      <span className="text-[10px] bg-blue-500/30 px-2 py-0.5 rounded text-blue-100 border border-blue-400/30">
@@ -358,14 +389,14 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
                 <ul className="space-y-2">
                 {quote.breakdown.map((item, idx) => (
                     <li key={idx} className="text-sm text-white/90 flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mt-1.5 shrink-0 shadow-[0_0_5px_rgba(147,197,253,0.8)]"></div>
                     <span className="leading-snug">{item}</span>
                     </li>
                 ))}
                 </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 shadow-lg mb-4 text-gray-800">
+            <div className="bg-white/90 backdrop-blur-md rounded-2xl p-4 shadow-lg mb-4 text-gray-800 border border-white/50">
                 <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                     <Clock className="w-4 h-4 text-blue-500" />
                     补充信息
@@ -373,23 +404,23 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
                 <div className="space-y-3">
                     <div>
                         <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">门锁密码</label>
-                        <input type="text" value={lockCode} onChange={e => setLockCode(e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="未填写" />
+                        <input type="text" value={lockCode} onChange={e => setLockCode(e.target.value)} className="w-full bg-white border border-gray-200 rounded-lg p-2 text-base outline-none focus:ring-1 focus:ring-blue-400 transition-all shadow-sm" placeholder="未填写" />
                     </div>
                     <div>
                          <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">备注</label>
-                         <input type="text" value={notes} onChange={e => setNotes(e.target.value)} className="w-full bg-gray-50 border border-gray-100 rounded-lg p-2 text-sm outline-none focus:ring-1 focus:ring-blue-400" placeholder="特殊要求..." />
+                         <input type="text" value={notes} onChange={e => setNotes(e.target.value)} className="w-full bg-white border border-gray-200 rounded-lg p-2 text-base outline-none focus:ring-1 focus:ring-blue-400 transition-all shadow-sm" placeholder="特殊要求..." />
                     </div>
                 </div>
             </div>
 
             <div className="flex flex-col gap-3">
-                 <Button onClick={handleCopyQuote} variant="secondary" className="w-full bg-white/20 text-white border-white/40 hover:bg-white/30 backdrop-blur-md">
+                 <Button onClick={handleCopyQuote} variant="secondary" className="w-full bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md">
                     <Copy className="w-4 h-4" />
                     复制报价单给客户
                 </Button>
                 <Button 
                   onClick={handleSave} 
-                  className="w-full shadow-xl shadow-blue-500/40 py-4 text-base bg-blue-600 text-white hover:bg-blue-700 border-none transform transition-all hover:scale-[1.01]"
+                  className="w-full shadow-xl shadow-blue-900/30 py-4 text-base bg-white text-blue-600 hover:bg-blue-50 border-none transform transition-all hover:scale-[1.01]"
                 >
                     <Save className="w-5 h-5" />
                     保存日程
