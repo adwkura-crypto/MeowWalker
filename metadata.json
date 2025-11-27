@@ -1,0 +1,7 @@
+{
+  "name": "发布版本MeowWalker - 上门喂猫助手",
+  "description": "专为上门喂猫服务设计的智能助手。基于高德地图 Web JS API 自动计算骑行距离与服务费，管理喂猫日程，支持节假日和多猫加价配置。",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
