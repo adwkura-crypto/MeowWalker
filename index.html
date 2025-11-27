@@ -6,7 +6,7 @@
     <title>MeowWalker - 上门喂猫</title>
     
     <!-- PWA Settings -->
-    <link rel="manifest" href="./manifest.json" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#ffffff" />
     
     <!-- iOS Specific Settings -->
@@ -48,7 +48,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           // Add error handling for preview environments where cross-origin restrictions block SW
-          navigator.serviceWorker.register('./service-worker.js')
+          navigator.serviceWorker.register('/service-worker.js')
             .then(function(registration) {
               console.log('ServiceWorker registration successful');
             })
