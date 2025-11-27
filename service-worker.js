@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meow-walker-v1';
+const CACHE_NAME = 'meow-walker-v2';
 const urlsToCache = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // 强制立即接管
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
