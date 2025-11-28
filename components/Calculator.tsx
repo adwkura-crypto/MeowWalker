@@ -283,8 +283,8 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
             />
           </div>
 
-          {/* Time and Cat Count on the same row */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Time and Cat Count on the same row with increased gap and consistent height */}
+          <div className="grid grid-cols-2 gap-6">
               <div>
                     <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">上门时间</label>
                     <div className="relative">
@@ -292,14 +292,14 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
                         type="time" 
                         value={time} 
                         onChange={e => setTime(e.target.value)} 
-                        className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all bg-white text-base font-bold text-slate-700 shadow-sm text-center" 
+                        className="w-full rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500/50 outline-none transition-all bg-white text-base font-bold text-slate-700 shadow-sm text-center h-[54px]" 
                     />
                     </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-gray-500 mb-1 ml-1 uppercase">猫咪数量</label>
-                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-gray-200 h-[48px] shadow-sm">
+                <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-gray-200 shadow-sm h-[54px]">
                     <button onClick={() => setCatCount(Math.max(1, catCount - 1))} className="w-10 h-full flex items-center justify-center rounded-lg bg-gray-50 shadow-sm text-blue-600 font-bold active:bg-blue-100 transition-colors hover:bg-gray-100 border border-gray-100">-</button>
                     <span className="flex-1 text-center font-bold text-gray-700">{catCount}</span>
                     <button onClick={() => setCatCount(catCount + 1)} className="w-10 h-full flex items-center justify-center rounded-lg bg-gray-50 shadow-sm text-blue-600 font-bold active:bg-blue-100 transition-colors hover:bg-gray-100 border border-gray-100">+</button>

@@ -194,7 +194,7 @@ const App: React.FC = () => {
         </main>
 
         {/* Bottom Navigation - Safe Area Bottom Spacing */}
-        <nav className="absolute bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-6 right-6 bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 px-2 py-1 flex justify-between items-center z-30 h-[72px]">
+        <nav className="absolute bottom-[calc(0.8rem+env(safe-area-inset-bottom))] left-6 right-6 bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 px-2 py-1 flex justify-between items-center z-30 h-[72px]">
           
           <button 
             onClick={() => setView(ViewState.CALCULATOR)}

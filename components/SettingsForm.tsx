@@ -11,7 +11,7 @@ interface SettingsFormProps {
 
 export const SettingsForm: React.FC<SettingsFormProps> = ({ settings, onSave }) => {
   const [localSettings, setLocalSettings] = useState<AppSettings>(settings);
-  const [isPricingOpen, setIsPricingOpen] = useState(true); // Default Open
+  const [isPricingOpen, setIsPricingOpen] = useState(false); // Default Closed
   const [isExtraFeesOpen, setIsExtraFeesOpen] = useState(false); // Default Closed
 
   const handleTierChange = (index: number, field: keyof PricingTier, value: string) => {
@@ -63,7 +63,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ settings, onSave }) 
         <p className="text-xs text-gray-400 mt-2 px-1">所有行程距离将以此地址为起点进行计算（电动车骑行距离）。</p>
       </div>
 
-      {/* 2. Pricing Tiers (Default Open) */}
+      {/* 2. Pricing Tiers (Default Closed) */}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-white/60">
         <button 
           onClick={() => setIsPricingOpen(!isPricingOpen)}
