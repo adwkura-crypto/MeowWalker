@@ -6,7 +6,8 @@ import { SettingsForm } from './components/SettingsForm';
 import { 
   PawPrint, 
   Calendar, 
-  SlidersHorizontal 
+  SlidersHorizontal,
+  Cat
 } from 'lucide-react';
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -108,7 +109,7 @@ const App: React.FC = () => {
 
   const showNotification = (title: string, body: string) => {
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(title, { body, icon: '/icon.png' });
+      new Notification(title, { body, icon: '/vite.svg' });
     } else {
       showToast(`${title}: ${body}`);
     }
@@ -161,8 +162,8 @@ const App: React.FC = () => {
               MeowWalker <span className="text-blue-500 text-xs px-2 py-0.5 bg-blue-50/80 rounded-full font-bold border border-blue-100">Pro</span>
             </h1>
           </div>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-100 to-blue-50 flex items-center justify-center text-xl shadow-inner border border-white overflow-hidden p-0.5">
-            <img src="/icon.png" alt="Logo" className="w-full h-full object-cover rounded-full" />
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-100 to-blue-50 flex items-center justify-center text-xl shadow-inner border border-white">
+            <Cat className="w-6 h-6 text-blue-500" />
           </div>
         </header>
 
