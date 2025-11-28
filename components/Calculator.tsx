@@ -202,7 +202,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
     <div className="space-y-6 relative pb-10">
       {/* Old Client Modal */}
       {showClientList && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/30 backdrop-blur-md animate-fade-in p-4" onClick={() => setShowClientList(false)}>
+          <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center bg-black/30 backdrop-blur-md animate-fade-in p-4" onClick={() => setShowClientList(false)}>
               <div className="bg-white/95 backdrop-blur-xl w-full max-w-md rounded-3xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col border border-white/40" onClick={e => e.stopPropagation()}>
                   <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-white">
                       <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
@@ -352,7 +352,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
              </div>
           </div>
 
-          <Button onClick={handleCalculate} isLoading={isLoading} className="w-full mt-2 shadow-xl shadow-blue-300/40 py-4 text-base bg-blue-600 hover:bg-blue-700 border-none backdrop-blur-sm">
+          <Button onClick={handleCalculate} isLoading={isLoading} className="w-full mt-6 shadow-xl shadow-blue-300/40 py-4 text-base bg-blue-600 hover:bg-blue-700 border-none backdrop-blur-sm">
             开始估价
           </Button>
         </div>

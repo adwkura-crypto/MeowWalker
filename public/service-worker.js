@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meow-walker-v3';
+const CACHE_NAME = 'meow-walker-v4'; // 升级版本号
 const urlsToCache = [
   '/',
   '/index.html',
@@ -6,7 +6,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // 强制立即接管
+  self.skipWaiting(); // 强制立即进入激活状态
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -19,6 +19,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
+        // 缓存命中则返回缓存
         if (response) {
           return response;
         }
@@ -38,6 +39,9 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    }).then(() => {
+      // 关键：立即接管所有页面，确保用户刷新后看到的是新版本
+      return self.clients.claim();
     })
   );
 });

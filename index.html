@@ -24,9 +24,25 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js')
+          // 添加时间戳参数 v=Date.now() 强制浏览器检查新版本
+          navigator.serviceWorker.register('/service-worker.js?v=' + Date.now())
             .then(function(registration) {
               console.log('ServiceWorker registration successful');
+              
+              // 检测更新
+              registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+                installingWorker.onstatechange = () => {
+                  if (installingWorker.state === 'installed') {
+                    if (navigator.serviceWorker.controller) {
+                      // 新内容可用，可以在这里提示用户刷新，目前我们依靠 clients.claim() 自动接管
+                      console.log('New content is available; please refresh.');
+                    } else {
+                      console.log('Content is cached for offline use.');
+                    }
+                  }
+                };
+              };
             })
             .catch(function(err) {
               console.warn('ServiceWorker registration failed:', err);
