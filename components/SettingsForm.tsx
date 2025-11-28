@@ -48,7 +48,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ settings, onSave }) 
          <h2 className="text-xl font-bold text-slate-800">规则设置</h2>
        </div>
       
-      {/* 1. Base Address */}
+      {/* 1. Base Address - Removed overflow-hidden so autocomplete dropdown shows */}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-white/60">
         <h3 className="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide">
           <Home className="w-4 h-4 text-blue-500" /> 出发位置
@@ -57,17 +57,17 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ settings, onSave }) 
           value={localSettings.baseAddress}
           onChange={(e) => setLocalSettings({...localSettings, baseAddress: e.target.value})}
           className="w-full p-4 rounded-2xl border border-gray-200 bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-300 outline-none text-sm transition-all shadow-sm"
-          placeholder="请输入您的常驻地址"
+          placeholder="点右侧定位或输入地址"
           enableLocation={true}
         />
         <p className="text-xs text-gray-400 mt-2 px-1">所有行程距离将以此地址为起点进行计算（电动车骑行距离）。</p>
       </div>
 
-      {/* 2. Pricing Tiers (Default Closed) */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-white/60">
+      {/* 2. Pricing Tiers - Removed overflow-hidden */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-white/60">
         <button 
           onClick={() => setIsPricingOpen(!isPricingOpen)}
-          className="w-full p-6 flex justify-between items-center text-left hover:bg-white/50 transition-colors"
+          className="w-full p-6 flex justify-between items-center text-left hover:bg-white/50 transition-colors rounded-3xl"
         >
           <h3 className="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wide">
             <DollarSign className="w-4 h-4 text-green-500" /> 基础收费标准
@@ -118,11 +118,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ settings, onSave }) 
         )}
       </div>
 
-      {/* 3. Extra Fees (Default Closed) */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-white/60">
+      {/* 3. Extra Fees - Removed overflow-hidden */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-white/60">
         <button 
             onClick={() => setIsExtraFeesOpen(!isExtraFeesOpen)}
-            className="w-full p-6 flex justify-between items-center text-left hover:bg-white/50 transition-colors"
+            className="w-full p-6 flex justify-between items-center text-left hover:bg-white/50 transition-colors rounded-3xl"
           >
             <h3 className="font-bold text-slate-700 flex items-center gap-2 text-sm uppercase tracking-wide">
               <Zap className="w-4 h-4 text-orange-500" /> 附加费用配置

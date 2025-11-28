@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 const DEFAULT_SETTINGS: AppSettings = {
-  baseAddress: '上海市静安寺',
+  baseAddress: '', // Default empty to force user setup
   pricingTiers: [
     { maxDistance: 1, price: 20 },
     { maxDistance: 2, price: 25 },
@@ -46,13 +46,29 @@ const App: React.FC = () => {
   // Load persistence
   useEffect(() => {
     const savedSettings = localStorage.getItem('meow_settings');
-    if (savedSettings) setSettings(JSON.parse(savedSettings));
-
     const savedApts = localStorage.getItem('meow_appointments');
+
+    // 1. Load Settings
+    if (savedSettings) {
+      const parsedSettings = JSON.parse(savedSettings);
+      setSettings(parsedSettings);
+      
+      // If base address is empty (even if saved), redirect to settings
+      if (!parsedSettings.baseAddress) {
+         setView(ViewState.SETTINGS);
+         setTimeout(() => showToast("请先设置您的出发位置 📍"), 500);
+      }
+    } else {
+      // First time user (no settings saved)
+      setView(ViewState.SETTINGS);
+      setTimeout(() => showToast("欢迎！请先设置出发位置以计算距离 📍"), 500);
+    }
+
+    // 2. Load Appointments
     if (savedApts) {
-      const parsed = JSON.parse(savedApts);
+      const parsedApts = JSON.parse(savedApts);
       // Migration: Add status if missing
-      const migrated = parsed.map((a: any) => ({
+      const migrated = parsedApts.map((a: any) => ({
         ...a,
         status: a.status || 'pending'
       }));
@@ -137,6 +153,10 @@ const App: React.FC = () => {
   };
 
   const handleSaveSettings = (newSettings: AppSettings) => {
+    if (!newSettings.baseAddress) {
+      showToast("请填写或定位出发位置 🗺️");
+      return;
+    }
     setSettings(newSettings);
     showToast("配置已保存，准备计算喵！");
     setTimeout(() => setView(ViewState.CALCULATOR), 1000);
@@ -193,8 +213,8 @@ const App: React.FC = () => {
           )}
         </main>
 
-        {/* Bottom Navigation - Safe Area Bottom Spacing */}
-        <nav className="absolute bottom-[calc(0.8rem+env(safe-area-inset-bottom))] left-6 right-6 bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 px-2 py-1 flex justify-between items-center z-30 h-[72px]">
+        {/* Bottom Navigation - Safe Area Bottom Spacing - Moved lower by reducing bottom calculation offset */}
+        <nav className="absolute bottom-[calc(0.2rem+env(safe-area-inset-bottom))] left-6 right-6 bg-white/70 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 px-2 py-1 flex justify-between items-center z-30 h-[72px]">
           
           <button 
             onClick={() => setView(ViewState.CALCULATOR)}

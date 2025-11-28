@@ -157,7 +157,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       </div>
 
       {showDropdown && (query.length > 1) && (
-        <div className="absolute z-50 w-full bg-white mt-1.5 rounded-xl shadow-xl border border-gray-100 max-h-64 overflow-y-auto animate-fade-in overflow-hidden">
+        <div className="absolute z-[100] w-full bg-white mt-1.5 rounded-xl shadow-xl border border-gray-100 max-h-64 overflow-y-auto animate-fade-in overflow-hidden">
            {loading ? (
              <div className="p-4 text-center text-gray-400 flex items-center justify-center gap-2 text-sm">
                <Loader2 className="w-4 h-4 animate-spin text-blue-500" /> 

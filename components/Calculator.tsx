@@ -16,7 +16,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
   const [address, setAddress] = useState('');
   const [clientName, setClientName] = useState('');
   const [catCount, setCatCount] = useState(1);
-  const [selectedDates, setSelectedDates] = useState<string[]>([new Date().toISOString().split('T')[0]]);
+  const [selectedDates, setSelectedDates] = useState<string[]>([]); // Initialize empty
   const [time, setTime] = useState('12:00');
   const [lockCode, setLockCode] = useState('');
   const [notes, setNotes] = useState('');
@@ -59,11 +59,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
   };
 
   const removeDate = (dateToRemove: string) => {
-    if (selectedDates.length > 1) {
-        setSelectedDates(selectedDates.filter(d => d !== dateToRemove));
-    } else {
-        showToast("至少需要一个日期喵");
-    }
+    setSelectedDates(selectedDates.filter(d => d !== dateToRemove));
   };
 
   const getWeekday = (dateStr: string) => {
@@ -104,6 +100,11 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
         showToast("请先在设置中配置出发地址");
         return;
     }
+    if (selectedDates.length === 0) {
+        showToast("请至少选择一个喂猫日期");
+        return;
+    }
+
     setIsLoading(true);
     try {
       const distResult = await calculateDistance(settings.baseAddress, address);
@@ -194,7 +195,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
     setAddress('');
     setNotes('');
     setLockCode('');
-    setSelectedDates([new Date().toISOString().split('T')[0]]);
+    setSelectedDates([]);
   };
 
   return (
@@ -318,6 +319,7 @@ export const Calculator: React.FC<CalculatorProps> = ({ settings, onSaveAppointm
              {/* Styled Date List */}
              <div className="bg-white border border-gray-200 rounded-xl p-3 mb-2 min-h-[50px] shadow-sm">
                  <div className="flex flex-wrap gap-2">
+                    {selectedDates.length === 0 && <span className="text-sm text-gray-400 py-2">请添加日期...</span>}
                     {selectedDates.map(date => (
                         <div key={date} className="group relative bg-blue-50 border border-blue-100 text-blue-700 pl-3 pr-8 py-2 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-all hover:scale-105 hover:shadow-md">
                             <div className="flex flex-col leading-none">
